@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            svg{
+                width: 800px;
+                height: 500px;
+            }
+
+            header{
+                font-size: 5rem;
+                font-variant: small-caps;
+                text-align: center;
+                letter-spacing: 5px;
+                font-weight: 0;
+                margin-bottom: 3rem;
+            }
+
+            h1{
+                border-top: 1px solid red;
+                text-align: center;
+                font-weight: 100;
+                font-variant: small-caps;
+            }
+
+            body{
+                margin: 0 10%;
+                font-size: 1.25rem;
+            }
+        </style>
+        <title>More plotter demos</title>
+    </head>
+    <body>
+        <header>More examples</header>
+
+        <p>Rectangles, polygons, text, changing colours, rotation, interaction etc.</p>
+
+        <h2>Drawing rectangles</h2>
+
+        <p>Three rectangles are drawn. Note that you can pass an object containing SVG attributes as the third argument, these attributes will be applied to the element when it is drawn.</p>
+
+        <pre>
+            let plot = new Plot(
+                document.getElementById("test_1"),
+                null,
+                {
+                    xlim : [-10, 10],
+                    ylim : [-10, 10]
+                }
+            );
+
+            plot.drawRect(0, 0, 5, 5);
+            plot.drawRect(5, 5, 1, 1, {fill : "red"});
+            plot.drawRect(2, 2, 2, 2, {fill : "rgb(40 140 200)", rotation : "45"});
+        </pre>
+
+        <svg id="test_1"></svg>
+
+        <h2>Adding text.</h2>
+
+        <pre>
+            let plot = new Plot(
+                document.getElementById("test_2"),
+                null,{
+                    xlim : [-10, 10],
+                    ylim : [-10, 10]
+                }
+            );
+
+            plot.addText("Symphony no. 3", 0, 0);
+            plot.addText("Argon", 3, 3, {rotation : "315"});
+        </pre>
+
+        <svg id="test_2"></svg>
+
+        <h2>Making the plots interactive</h2>
+
+        <p>It is relatively easy to make the plots interactive via Javascript because when you draw something to the plot, the drawn object is returned. You can catch the object, assign it to a variable and the do with it <em>whatever you just want...</em></p>
+
+        <p>Note that if the element's coordinates are changed while it is rotated, and it is then rotated again, this will make the element jump around a bit. This is because when the element is moved, the center point of the rotation should move with it. Obviously that is something that is not currently implemented.</p>
+
+        <p>To get the coordinates right, you can use the plot-objects transform methods as in the example.</p>
+
+        <pre>
+            let plot = new Plot(
+                document.getElementById("test_3"),
+                null,{
+                    xlim : [-10, 10],
+                    ylim : [-10, 10]
+                }
+            );
+
+            let text = plot.addText("Don't spin me, I'll puke!", 0, 0);
+            
+            let rotSlider = document.getElementById("test_3_rotation");
+            let xSlider = document.getElementById("test_3_x");
+            let ySlider = document.getElementById("test_3_y");
+            
+            rotSlider.addEventListener("input", () => {
+                plot.rotateElement(text, parseInt(rotSlider.value));
+            });
+
+
+            xSlider.addEventListener("input", () => {
+                text.setAttribute("x", plot.transformXCoordinate(xSlider.value));
+            });
+
+            ySlider.addEventListener("input", () => {
+                text.setAttribute("y", plot.transformYCoordinate(ySlider.value));
+            });
+        </pre>
+
+        <svg id="test_3"></svg>
+
+        <table>
+            <tr>
+                <td>Rotation:</td>
+                <td><input type="range" min="-180" max="180" id="test_3_rotation"></td>
+            </tr>
+            <tr>
+                <td>x:</td>
+                <td><input type="range" min="-4" max="4" id="test_3_x"></td>
+            </tr>
+            <tr>
+                <td>y:</td>
+                <td><input type="range" min="-4" max="4" id="test_3_y"></td>
+            </tr>
+        </table>
+
+        <h2>Polygons</h2>
+
+        <p>Polygons, of course! Everyone loves polygons. Note that in the code below the polygons are saved into objects: when you call a drawing method, it returns the SVG object so that it can be easily manipulated. Of course this can be omitted and you can call the methods without explicitly saving the returned object.</p>
+
+        <pre>
+            let plot = new Plot(
+                document.getElementById("test_4"),
+                null,
+                {
+                    xlim : [-2, 2],
+                    ylim : [-2, 2]
+                }
+            );
+
+            let xcoords = [-1, 0, 1, 0];
+            let ycoords = [0, 1, 0, -1];
+
+            let poly = plot.drawPolygon(
+                xcoords, 
+                ycoords, 
+                {
+                    fill : "rgb(255, 230, 25)",
+                    opacity : "0.5", 
+                    stroke : "black"
+                });
+            
+            let poly2 = plot.drawPolygon(
+                [-0.5, 0.5, 1.5, 0.5],
+                [1, 2, 1, 0],
+                {
+                    opacity : "0.5"
+                }
+            )             
+        </pre>
+
+        <svg id="test_4"></svg>
+
+        <h2>Multicoloured balls</h2>
+
+        <svg id="test_5"></svg>
+
+        <pre>
+            let plot = new Plot(
+                document.getElementById("test_5"),
+                null,
+                {
+                    xlim : [0, 255],
+                    ylim : [0, 100],
+                    xlab : "Hue",
+                    ylab : "Saturation (%)"
+                }
+            );
+
+            let n = 500;
+            
+            for(let i = 0; i < n; i++){
+                let hue = Math.random() * 255;
+                let saturation = Math.random() * 100;
+
+                plot.drawPoint(
+                    hue,
+                    saturation,
+                    {
+                        fill : `hsl(${hue}, ${saturation}%, 50%)`
+                    });
+            }
+            
+        </pre>
+
+        <h2>Plot a function using .drawCurve(f, min, max, opt)</h2>
+
+        <svg id="test_6"></svg>
+
+        <pre>
+            function xSquared(x){
+                return x * x - 2;
+            }
+
+            let plot = new Plot(
+                document.getElementById("test_6"),
+                null,
+                {
+                    xlim : [-10, 10],
+                    ylim : [-5, 5]
+
+                }
+            )
+
+            plot.hline(0, {"stroke-dasharray" : [2, 2]});
+            plot.vline(0, {"stroke-dasharray" : [2, 2]});
+            plot.drawCurve(xSquared, -5, 5);
+        </pre>
+        
+
+
+    </body>
+    <script src="../plotter_v1_2.js"></script>
+    <script>
+        function runTest1(){
+            let plot = new Plot(
+                document.getElementById("test_1"),
+                null,
+                {
+                    xlim : [-10, 10],
+                    ylim : [-10, 10]
+                }
+            );
+
+            plot.drawRect(0, 0, 5, 5);
+            plot.drawRect(5, 5, 1, 1, {fill : "red"});
+            plot.drawRect(2, 2, 2, 2, {fill : "rgb(40 140 200)", rotation : "45"});
+
+            return plot;
+        }
+
+        function runTest2(){
+            let plot = new Plot(
+                document.getElementById("test_2"),
+                null,{
+                    xlim : [-10, 10],
+                    ylim : [-10, 10]
+                }
+            );
+
+            plot.addText("Symphony no. 3", 0, 0);
+            plot.addText("Argon", 3, 3, {rotation : "315"});
+
+            return plot;
+        }
+
+        function runTest3(){
+            let plot = new Plot(
+                document.getElementById("test_3"),
+                null,{
+                    xlim : [-10, 10],
+                    ylim : [-10, 10]
+                }
+            );
+
+            let text = plot.addText("Don't spin me, I'll puke!", 0, 0);
+            
+            let rotSlider = document.getElementById("test_3_rotation");
+            let xSlider = document.getElementById("test_3_x");
+            let ySlider = document.getElementById("test_3_y");
+            
+            rotSlider.addEventListener("input", () => {
+                plot.rotateElement(text, parseInt(rotSlider.value));
+            });
+
+
+            xSlider.addEventListener("input", () => {
+                text.setAttribute("x", plot.transformXCoordinate(xSlider.value));
+            });
+
+            ySlider.addEventListener("input", () => {
+                text.setAttribute("y", plot.transformYCoordinate(ySlider.value));
+            });
+            
+            return plot;
+        }
+
+        function runTest4(){
+            let plot = new Plot(
+                document.getElementById("test_4"),
+                null,
+                {
+                    xlim : [-2, 2],
+                    ylim : [-2, 2]
+                }
+            );
+
+            let xcoords = [-1, 0, 1, 0];
+            let ycoords = [0, 1, 0, -1];
+
+            let poly = plot.drawPolygon(
+                xcoords, 
+                ycoords, 
+                {
+                    fill : "rgb(255, 230, 25)",
+                    opacity : "0.5", 
+                    stroke : "black"
+                });
+            
+            let poly2 = plot.drawPolygon(
+                [-0.5, 0.5, 1.5, 0.5],
+                [1, 2, 1, 0],
+                {
+                    opacity : "0.5"
+                }
+            ) 
+            return plot;
+        }
+
+        function runTest5(){
+            let plot = new Plot(
+                document.getElementById("test_5"),
+                null,
+                {
+                    xlim : [0, 255],
+                    ylim : [0, 100],
+                    xlab : "Hue",
+                    ylab : "Saturation (%)"
+                }
+            );
+
+            let n = 500;
+            
+            for(let i = 0; i < n; i++){
+                let hue = Math.random() * 255;
+                let saturation = Math.random() * 100;
+
+                plot.drawPoint(
+                    hue,
+                    saturation,
+                    {
+                        fill : `hsl(${hue}, ${saturation}%, 50%)`
+                    });
+            }
+        }
+
+        function runTest6(){
+            function xSquared(x){
+                return x * x - 2;
+            }
+
+            let plot = new Plot(
+                document.getElementById("test_6"),
+                null,
+                {
+                    xlim : [-10, 10],
+                    ylim : [-5, 5]
+
+                }
+            )
+
+            plot.hline(0, {"stroke-dasharray" : [2, 2]});
+            plot.vline(0, {"stroke-dasharray" : [2, 2]});
+            plot.drawCurve(xSquared, -5, 5);
+        }
+
+        let test1 = runTest1();
+        let test2 = runTest2();
+        let test3 = runTest3();
+        let test4 = runTest4();
+        let test5 = runTest5();
+        let test6 = runTest6();
+    </script>
+</html>

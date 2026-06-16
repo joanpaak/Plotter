@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            svg{
+                width: 800px;
+                height: 500px;
+            }
+
+            header{
+                font-size: 5rem;
+                font-variant: small-caps;
+                text-align: center;
+                letter-spacing: 5px;
+                font-weight: 0;
+                margin-bottom: 3rem;
+            }
+
+            h1{
+                border-top: 1px solid red;
+                text-align: center;
+                font-weight: 100;
+                font-variant: small-caps;
+            }
+
+            body{
+                margin: 0 10%;
+                font-size: 1.25rem;
+            }
+        </style>
+        <title>Plotter demos</title>
+    </head>
+    <body>
+        <main>
+            <header>Tests and examples</header>
+
+            <p>Take a gander at these examples to see how various common plottinh tasks are accomplished. See the Contents list below to get an idea what you find from each of the examples.</p>
+
+            <h1>Contents</h1>
+
+            <ol>
+                <li>Scatterplot <ul>
+                    <li>Demonstrates a basic x/y scatterplot</li>
+                </ul></li>
+                <li>Emtpy plot <ul>
+                    <li>How to create an empty plot in which to maybe draw something later.</li>
+                </ul></li>
+                <li> Empty plot with x label
+                    <ul>
+                        <li>How to add x axis label</li>
+                    </ul>
+                </li>
+                <li> Empty plot with y label
+                    <ul>
+                        <li>How to add y axis label</li>
+                    </ul>
+                </li>
+                <li> Empty plot with x and y labels
+                    <ul>
+                        <li>How to add x and y axis labels</li>
+                    </ul>
+                </li>
+                <li>
+                    Traceplot, theta on x axis
+                    <ul>
+                        <li>Plot with a line.
+                            Concretely shows how to plot a a Markov Chain when indices are on y axis. Kind of a 90 degree rotated version of what's typically done.
+                        </li>
+                    </ul>
+                </li>
+                <li>Traceplot, theta on y axis
+                    <ul>
+                        <li>See above; a common way of drawing a Markov Chain.</li>
+                    </ul>
+                </li>
+                <li> Large scatterplot
+                    <ul>
+                        <li>Times how long it takes to draw 10000 points. Mainly just to satisfy curiosity.</li>
+                    </ul>
+                </li>
+                <li>Handling tickmarks
+                    <ul>
+                        <li>Demonstrates the option pruneLongTickmarks which tries to stop tick labels from overlapping.</li>
+                    </ul>
+                </li>
+                <li>Omitting axes
+                    <ul>
+                        <li>How to draw a plot without axes and add a point onto the emtpy canvas.</li>
+                    </ul>
+
+                </li>
+            </ol>
+
+            <h1>Scatterplot</h1>
+
+            <p>Scatterplot with automaticallly generated tickmarks and labels.</p>
+
+            <pre>
+            let test = new Plot(
+                document.getElementById("test1"),
+                {x : x , y : y}
+            );
+            </pre>
+
+            <svg id="test1"></svg>
+
+            <h1>Empty plot</h1>
+
+            <p>Empty plot with automaticallly generated tickmarks and labels.</p>
+
+            <pre>
+            let test = new Plot(
+                document.getElementById("test2"),
+                null,
+                {
+                    xlim : [0, 1],
+                    ylim : [0, 1]
+                }
+            );
+            </pre>
+
+            <svg id="test2"></svg>
+
+            <h1>Empty plot with x label</h1>
+
+            <pre>
+            let test = new Plot(
+                document.getElementById("test3"),
+                null,
+                {
+                    xlim : [-10, 10],
+                    ylim : [0, 1],
+                    xlab : "Onkalo"
+                }
+            )
+            </pre>
+
+            <svg id="test3"></svg>
+
+            <h1>Empty plot with y label</h1>
+
+            <pre>
+            let test = new Plot(
+                document.getElementById("test4"),
+                null,
+                {
+                    xlim : [-10, 10],
+                    ylim : [0, 1],
+                    ylab : "Onkalo"
+                }
+            )                
+            </pre>
+
+            <svg id="test4"></svg>
+
+            <h1>Empty plot with y and y labels</h1>
+
+            <pre>
+            let test = new Plot(
+                document.getElementById("test5"),
+                null,
+                {
+                    xlim : [-10, 10],
+                    ylim : [0, 1],
+                    xlab : "Ydinjätteen määrä",
+                    ylab : "Onkalo"
+                }
+            )            
+            </pre>
+
+            <svg id="test5"></svg>
+
+            <h1>Traceplot, value of &theta; on x axis</h1>
+
+            <pre>
+            let test = new Plot(
+                document.getElementById("test6"),
+                {
+                    x : x
+                },
+                {
+                    type : "l",
+                    ylab : "Index",
+                    xlab : "Theta"
+                }
+            )                
+            </pre>
+
+            <svg id="test6"></svg>
+
+            <h1>Traceplot, value of &theta; on y axis</h1>
+
+            <pre>
+                let test = new Plot(
+                    document.getElementById("test7"),
+                    {
+                        y : theta
+                    },
+                    {
+                        type : "l",
+                        ylab : "Theta",
+                        xlab : "Index"
+                    }
+                )
+            </pre>
+
+            <svg id="test7"></svg>
+
+            <h1>Large scatter plot</h1>
+
+            <pre>
+            let test = new Plot(
+                document.getElementById("test8"),
+                {x : x , y : y},
+                {logging : true}
+            );
+            </pre>
+
+            <svg id="test8"></svg>
+            <p id="largeScatTime"></p>
+
+            <h1>Handling tickmarks</h1>
+
+            <p>Overlapping tickmarks are pruned by default. This first example uses the option pruneLongTickmarks to disable the feature.</p>
+
+            <pre>
+                let test1 = new Plot(
+                document.getElementById("test9a"),
+                null,
+                {
+                    xlim : [0, 5],
+                    ylim : [-5, 5],
+                    ytickplaces : [0, 1],
+                    ytickmarks : ["Long text", "Another long text"],
+                    xtickplaces : [1, 2, 3, 4],
+                    xtickmarks : [
+                        "Text",
+                        "This is a particularly long tick mark",
+                        "Text",
+                        "Text"
+                    ],
+                    pruneLongTickmarks : false
+                }
+            )
+            </pre>
+
+            <svg id="test9a"></svg>
+            
+            <br>
+
+            <p>In this next plot the feature is left on:</p>
+
+            <pre>
+             let test2 = new Plot(
+                document.getElementById("test9b"),
+                null,
+                {
+                    xlim : [0, 5],
+                    ylim : [-5, 5],
+                    ytickplaces : [0, 1],
+                    ytickmarks : ["Long text", "Another long text"],
+                    xtickplaces : [1, 2, 3, 4],
+                    xtickmarks : [
+                        "Text",
+                        "This is a particularly long tick mark",
+                        "Text",
+                        "Text"
+                    ]
+                }
+            )               
+            </pre>
+
+            <svg id="test9b"></svg>
+
+            <h1>Omitting axes</h1>
+
+            <pre>
+            let plot = new Plot(
+                document.getElementById("test10"),
+                null,
+                {
+                    xlim : [0, 10],
+                    ylim : [0, 10],
+                    drawAxes : false
+                }
+            )
+
+            plot.drawPoint(5, 5);                
+            </pre>
+
+            <svg id="test10"></svg>
+        </main>
+    </body>
+
+    <script src="../plotter_v1_2.js"></script>
+    <script>
+        function runTest1(){
+            let N = 100;
+            let x = new Array(N);
+            let y = new Array(N);
+
+            for(let i = 0; i < N; i++){
+                x[i] = Math.random() * 100 - 50;
+                y[i] = Math.random() * 100 - 50;
+            }
+
+            let test = new Plot(
+                document.getElementById("test1"),
+                {x : x , y : y},
+                {logging : true}
+            );
+
+            return test;
+        }
+
+        function runTest2(){
+            let test = new Plot(
+                document.getElementById("test2"),
+                null,
+                {
+                    xlim : [0, 1],
+                    ylim : [0, 1],
+                    logging: true
+                }
+            );
+
+            return test;
+        }
+
+        function runTest3(){
+            let test = new Plot(
+                document.getElementById("test3"),
+                null,
+                {
+                    xlim : [-10, 10],
+                    ylim : [0, 1],
+                    xlab : "Onkalo"
+                }
+            )
+
+            return test;
+        }
+
+        function runTest4(){
+            let test = new Plot(
+                document.getElementById("test4"),
+                null,
+                {
+                    xlim : [-10, 10],
+                    ylim : [0, 1],
+                    ylab : "Onkalo"
+                }
+            )
+
+            return test;
+        }
+
+        function runTest5(){
+            let test = new Plot(
+                document.getElementById("test5"),
+                null,
+                {
+                    xlim : [-10, 10],
+                    ylim : [0, 1],
+                    xlab : "Ydinjätteen määrä",
+                    ylab : "Onkalo"
+                }
+            )
+
+            return test;
+        }
+
+        function runTest6(){
+            let N = 100;
+            let theta = new Array(N);
+
+            for(let i = 0; i < N; i++){
+                theta[i] = Math.random() * 10 - 5;
+            }
+
+            let test = new Plot(
+                document.getElementById("test6"),
+                {
+                    x : theta
+                },
+                {
+                    type : "l",
+                    ylab : "Index",
+                    xlab : "Theta"
+                }
+            )
+
+            return test;
+        }
+
+        function runTest7(){
+            let N = 100;
+            let theta = new Array(N);
+
+            for(let i = 0; i < N; i++){
+                theta[i] = Math.random() * 10 - 5;
+            }
+
+            let test = new Plot(
+                document.getElementById("test7"),
+                {
+                    y : theta
+                },
+                {
+                    type : "l",
+                    ylab : "Theta",
+                    xlab : "Index"
+                }
+            )
+
+            return test;
+        }
+
+        function runTest8(){
+            let N = 10000;
+            let x = new Array(N);
+            let y = new Array(N);
+
+            for(let i = 0; i < N; i++){
+                x[i] = Math.random() * 100 - 50;
+                y[i] = Math.random() * 100 - 50;
+            }
+
+            let startTime = performance.now();
+
+            let test = new Plot(
+                document.getElementById("test8"),
+                {x : x , y : y},
+                {logging : true}
+            );
+
+            let endTime = performance.now();
+            document.getElementById("largeScatTime").
+            innerText = `Took ${endTime - startTime} ms to draw 10000 points`;
+
+            return test;
+        }
+
+        function runTest9(){
+            let test1 = new Plot(
+                document.getElementById("test9a"),
+                null,
+                {
+                    xlim : [0, 5],
+                    ylim : [-5, 5],
+                    ytickplaces : [0, 1],
+                    ytickmarks : ["Long text", "Another long text"],
+                    xtickplaces : [1, 2, 3, 4],
+                    xtickmarks : [
+                        "Text",
+                        "This is a particularly long tick mark",
+                        "Text",
+                        "Text"
+                    ],
+                    pruneLongTickmarks : false
+                }
+            )
+
+
+            let test2 = new Plot(
+                document.getElementById("test9b"),
+                null,
+                {
+                    xlim : [0, 5],
+                    ylim : [-5, 5],
+                    ytickplaces : [0, 1],
+                    ytickmarks : ["Long text", "Another long text"],
+                    xtickplaces : [1, 2, 3, 4],
+                    xtickmarks : [
+                        "Text",
+                        "This is a particularly long tick mark",
+                        "Text",
+                        "Text"
+                    ]
+                }
+            )
+
+            return [test1, test2];
+        }
+
+        function runTest10(){
+            let plot = new Plot(
+                document.getElementById("test10"),
+                null,
+                {
+                    xlim : [0, 10],
+                    ylim : [0, 10],
+                    drawAxes : false
+                }
+            )
+
+            plot.drawPoint(5, 5);
+        }
+
+        /* */
+
+        let test1 = runTest1();
+        let test2 = runTest2();
+        let test3 = runTest3();
+        let test4 = runTest4();
+        let test5 = runTest5();
+        let test6 = runTest6();
+        let test7 = runTest7();  
+        let test8 = runTest8();
+        let test9 = runTest9();
+        let test10 = runTest10(); 
+    </script>
+</html>

@@ -87,7 +87,11 @@
                     <ul>
                         <li>How to draw a plot without axes and add a point onto the emtpy canvas.</li>
                     </ul>
-
+                </li>
+                <li>Drawing a vector as points
+                    <ul>
+                        <li>You don't necessary have to provide both x and y coordinates to draw points. If you provide just a vector, indices are created autoatically.</li>
+                    </ul>
                 </li>
             </ol>
 
@@ -289,10 +293,27 @@
             </pre>
 
             <svg id="test10"></svg>
+
+            <pre>
+            let plot = new Plot(
+                document.getElementById("test11"),
+                null,
+                {
+                    xlim : [0, 101],
+                    ylim : [0, 11]
+                }
+            );
+
+            plot.drawPoints(x);
+            </pre>
+
+            <h1>Plotting a vector as points</h1>
+
+            <svg id="test11"></svg>
         </main>
     </body>
 
-    <script src="../plotter_v1_2.js"></script>
+    <script src="../plotter_v1_21.js"></script>
     <script>
         function runTest1(){
             let N = 100;
@@ -497,6 +518,25 @@
             plot.drawPoint(5, 5);
         }
 
+        function runTest11(){
+            let x = new Array(100);
+
+            for(let i = 0; i < x.length; i++){
+                x[i] = Math.random() + i / 10;
+            }
+
+            let plot = new Plot(
+                document.getElementById("test11"),
+                null,
+                {
+                    xlim : [0, 101],
+                    ylim : [0, 11]
+                }
+            );
+
+            plot.drawPoints(x);
+        }
+
         /* */
 
         let test1 = runTest1();
@@ -509,5 +549,6 @@
         let test8 = runTest8();
         let test9 = runTest9();
         let test10 = runTest10(); 
+        let test11 = runTest11();
     </script>
 </html>

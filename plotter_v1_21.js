@@ -646,10 +646,10 @@ class Plot{
         }
 
         if(y === undefined || y === null){
-            y = new Array(x.length);
+            y = Array.from(x);
+            x = new Array(y.length);
 
-            for(let i = 0; i < y.length; i++){
-                y[i] = x[i];
+            for(let i = 0; i < x.length; i++){
                 x[i] = (i + 1);
             }
         }
@@ -703,12 +703,11 @@ class Plot{
         }
     
         drawLines(x, y, opt){
-
             if(y === undefined | y === null){
-                y = new Array(x.length);
+                y = Array.from(x);
+                x = new Array(y.length);
                 
                 for(let i = 0; i < x.length; i++){
-                    y[i] = x[i];
                     x[i] = (i + 1);
                 }
             }

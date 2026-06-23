@@ -93,6 +93,12 @@
                         <li>You don't necessary have to provide both x and y coordinates to draw points/lines. If you provide just a vector, indices are created autoatically.</li>
                     </ul>
                 </li>
+
+                <li>Test copying
+                    <ul>
+                        <li>Nothing to see if you are just interested in practicalities of using this library. This tests that array arguments are copied and the originals are not modified.</li>
+                    </ul>
+                </li>
             </ol>
 
             <h1>Scatterplot</h1>
@@ -326,6 +332,14 @@
             </pre>
 
             <svg id="test12"></svg>
+
+            <h1>Test copying arrays</h1>
+
+            <p>Some methods modify the input array. This test ensures that the original is unmodifed and changes are done intenally to a copy.</p>
+
+            <p>You should see two points at (1, 0) and (1, 5) connected with a line. If you see four points or two lines the original data has been messed with.</p>
+
+            <svg id="test13"></svg>
         </main>
     </body>
 
@@ -572,6 +586,27 @@
             plot.drawLines(x);
         }
 
+        function runTest13(){
+            let plot = new Plot(
+                document.getElementById("test13"),
+                null,
+                {
+                    xlim : [0, 10],
+                    ylim : [0, 10]
+                }
+            );
+
+            let x = [0, 5];
+            plot.drawPoints(x);
+            plot.drawPoints(x);
+            
+            x = [0, 5];
+            plot.drawLines(x);
+            plot.drawLines(x);
+            
+
+        }
+
         /* */
 
         let test1 = runTest1();
@@ -586,5 +621,6 @@
         let test10 = runTest10(); 
         let test11 = runTest11(); 
         let test12 = runTest12();
+        let test13 = runTest13();
     </script>
 </html>

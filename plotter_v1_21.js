@@ -703,6 +703,16 @@ class Plot{
         }
     
         drawLines(x, y, opt){
+
+            if(y === undefined | y === null){
+                y = new Array(x.length);
+                
+                for(let i = 0; i < x.length; i++){
+                    y[i] = x[i];
+                    x[i] = (i + 1);
+                }
+            }
+
             if(x.length != y.length){
               throw "Error in drawing lines: x and y coordinates differ in length";
             }   

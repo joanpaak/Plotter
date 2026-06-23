@@ -219,7 +219,75 @@
             plot.vline(0, {"stroke-dasharray" : [2, 2]});
             plot.drawCurve(xSquared, -5, 5);
         </pre>
-        
+
+        <h2>Interactive 2nd degree polynomial</h2>
+
+        <p>Interactivity is neat. Here, change the parameters and see how the polynomial behaves.</p>
+
+        <table>
+            <tr>
+                <td>a:</td>
+                <td>
+                    <input type="range" min="-5" max="5" id="aSlider" step="0.01">
+                </td>
+            </tr>
+            <tr>
+                <td>b: </td>
+                <td>
+                    <input type="range" min="-5" max="5" id="bSlider" step="0.01">
+                </td>
+            </tr>
+            <tr>
+                <td>c: </td>
+                <td>
+                    <input type="range" min="-5" max="5" id="cSlider" step="0.01">
+                </td>
+            </tr>
+        </table>
+
+        <svg id="test_7"></svg>
+
+        <pre>
+            let POLY_CURVE;
+            let PLOT;
+
+            function polynomial(x, a, b, c){
+                return a + b * x + c * (x * x);
+            }
+
+            function updatePolyCurve(){
+                let a = parseFloat(document.getElementById("aSlider").value);
+                let b = parseFloat(document.getElementById("bSlider").value);
+                let c = parseFloat(document.getElementById("cSlider").value);
+                
+                if(POLY_CURVE != undefined){
+                    POLY_CURVE.remove();
+                }
+
+                if(PLOT != undefined){
+                    POLY_CURVE = PLOT.drawCurve(x => polynomial(x, a, b, c), -10, 10);
+                }
+            }
+
+            document.getElementById("aSlider").addEventListener("input", updatePolyCurve);
+            document.getElementById("bSlider").addEventListener("input", updatePolyCurve);
+            document.getElementById("cSlider").addEventListener("input", updatePolyCurve);
+
+            PLOT = new Plot(
+                document.getElementById("test_7"),
+                null,
+                {
+                    xlim : [-10, 10],
+                    ylim : [-5, 5]
+
+                }
+            )
+
+            PLOT.hline(0, {"stroke-dasharray" : [2, 2]});
+            PLOT.vline(0, {"stroke-dasharray" : [2, 2]});
+
+            updatePolyCurve();            
+        </pre>
 
 
     </body>
@@ -367,11 +435,54 @@
             plot.drawCurve(xSquared, -5, 5);
         }
 
+        function runTest7(){
+            let POLY_CURVE;
+            let PLOT;
+
+            function polynomial(x, a, b, c){
+                return a + b * x + c * (x * x);
+            }
+
+            function updatePolyCurve(){
+                let a = parseFloat(document.getElementById("aSlider").value);
+                let b = parseFloat(document.getElementById("bSlider").value);
+                let c = parseFloat(document.getElementById("cSlider").value);
+                
+                if(POLY_CURVE != undefined){
+                    POLY_CURVE.remove();
+                }
+
+                if(PLOT != undefined){
+                    POLY_CURVE = PLOT.drawCurve(x => polynomial(x, a, b, c), -10, 10);
+                }
+            }
+
+            document.getElementById("aSlider").addEventListener("input", updatePolyCurve);
+            document.getElementById("bSlider").addEventListener("input", updatePolyCurve);
+            document.getElementById("cSlider").addEventListener("input", updatePolyCurve);
+
+            PLOT = new Plot(
+                document.getElementById("test_7"),
+                null,
+                {
+                    xlim : [-10, 10],
+                    ylim : [-5, 5]
+
+                }
+            )
+
+            PLOT.hline(0, {"stroke-dasharray" : [2, 2]});
+            PLOT.vline(0, {"stroke-dasharray" : [2, 2]});
+
+            updatePolyCurve();
+        }
+
         let test1 = runTest1();
         let test2 = runTest2();
         let test3 = runTest3();
         let test4 = runTest4();
         let test5 = runTest5();
         let test6 = runTest6();
+        let test7 = runTest7();
     </script>
 </html>

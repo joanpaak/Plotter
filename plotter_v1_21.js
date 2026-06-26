@@ -231,6 +231,14 @@ class Plot{
             ];
         }
 
+        if(this.opt.xlim[1] - this.opt.xlim[0] < Number.MIN_VALUE){
+            // TODO: Maybe put more thought into thinking if that constant is reasonable.
+            this.opt.xlim[1] = this.opt.xlim[0] + 0.01;
+        }
+        if(this.opt.ylim[1] - this.opt.ylim[0] < Number.MIN_VALUE){
+            this.opt.ylim[1] = this.opt.ylim[0] + 0.01;
+        }
+
         /* The point of this part is to add some "leeway": we 
            want the plotting area to be slightly larger than
            the range of the data.  */
